@@ -33,7 +33,7 @@ TAG_NAME=
 GIT_COMMAND=
 JUST_TAG=
 
-while getopts "c:w:t:nh" OPTION
+while getopts "c:w:t:g:nh" OPTION
 do
     case $OPTION in
         c)
