@@ -14,6 +14,7 @@ usage() {
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild'
         -g <git cmd>    Alternative git commit, defaults to 'tag -a'
         -w <path>       Path to your configuration git directory
+        -n              Don't actually call nixos-rebuild and just generate a tag
         -h              Show this help and exit
 
         Everything after a double dash (--) will be passed to nixos-rebuild as
@@ -30,8 +31,9 @@ ARGS=
 WD=
 TAG_NAME=
 GIT_COMMAND=
+JUST_TAG=
 
-while getopts "c:w:t:h" OPTION
+while getopts "c:w:t:nh" OPTION
 do
     case $OPTION in
         c)
@@ -50,6 +52,11 @@ do
         g)
             GIT_COMMAND=$OPTARG
             stdout "GIT_COMMAND = $GIT_COMMAND"
+            ;;
+
+        n)
+            JUST_TAG=1
+            stdout "JUST_TAG = $JUST_TAG"
             ;;
 
         h)
@@ -85,8 +92,14 @@ then
     GIT_COMMAND="tag -a"
 fi
 
-explain sudo nixos-rebuild $COMMAND $ARGS
-REBUILD_EXIT=$?
+if [[ -z "$JUST_TAG" ]]
+then
+    explain sudo nixos-rebuild $COMMAND $ARGS
+    REBUILD_EXIT=$?
+else
+    stdout "Do not call nixos-rebuild"
+    REBUILD_EXIT=0
+fi
 
 if [[ $REBUILD_EXIT -eq 0 ]]
 then
