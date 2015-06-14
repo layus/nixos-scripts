@@ -91,9 +91,9 @@ REBUILD_EXIT=$?
 if [[ $REBUILD_EXIT -eq 0 ]]
 then
     stdout 'Trying: sudo nix-env -p /nix/var/nix/profiles/system' \
-           '--list-generations | grep current | cut -d " " -f 2'
+           '--list-generations | grep current | awk -F' ' '{ print $1 }''
     LASTGEN=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations |\
-        grep current | cut -d " " -f 2)
+        grep current | awk -F' ' '{ print $1 }')
     sudo -k
 
     stdout "sudo -k succeeded"
